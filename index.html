@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CivicSense — AI-Powered Civic Issue Reporting</title>
+<meta name="description" content="CivicSense is an AI-powered mobile app that lets Pakistani citizens report civic infrastructure issues with one photo. FYP project by Chaudhary Ammaz Hussain & Muhammad Anas, Bahria University Islamabad.">
+
+<!-- Open Graph for sharing -->
+<meta property="og:title" content="CivicSense — AI-Powered Civic Issue Reporting">
+<meta property="og:description" content="Snap a photo. AI does the rest. The fastest way for Pakistani citizens to report civic issues.">
+<meta property="og:type" content="website">
+
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #F4F1EA;
+    --bg-deep: #1A2E2A;
+    --ink: #0F1F1C;
+    --ink-soft: #2D3F3A;
+    --paper: #FBF8F1;
+    --moss: #2B4A3E;
+    --moss-light: #4A7765;
+    --ochre: #D4922A;
+    --ochre-bright: #E8A547;
+    --terracotta: #B8553A;
+    --line: #2A3D38;
+    --rule: rgba(15, 31, 28, 0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    background: var(--bg-deep);
+    color: var(--paper);
+    padding: 60px 0 70px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(244, 241, 234, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(244, 241, 234, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -150px;
+    width: 400px;
+    height: 400px;
+    background: var(--ochre);
+    transform: rotate(45deg);
+    opacity: 0.06;
+  }
+
+  .meta-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--ochre-bright);
+    font-weight: 500;
+    margin-bottom: 40px;
+    position: relative;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .meta-top .left { display: flex; align-items: center; gap: 14px; }
+  .meta-top .dot {
+    width: 7px; height: 7px;
+    background: var(--ochre);
+    border-radius: 50%;
+  }
+
+  .hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(70px, 14vw, 140px);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--paper);
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .hero-title .accent {
+    color: var(--ochre-bright);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.85em;
+    display: inline-block;
+    transform: translateY(-8px);
+  }
+
+  .tagline-rule {
+    width: 60px;
+    height: 3px;
+    background: var(--ochre);
+    margin: 30px 0 22px;
+  }
+
+  .tagline {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(20px, 3.5vw, 28px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.3;
+    color: var(--paper);
+    letter-spacing: -0.01em;
+    max-width: 700px;
+    margin-bottom: 36px;
+  }
+
+  .tagline strong {
+    font-weight: 700;
+    font-style: normal;
+    color: var(--ochre-bright);
+  }
+
+  .hero-cta-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary {
+    background: var(--ochre);
+    color: var(--ink);
+  }
+
+  .btn-primary:hover {
+    background: var(--ochre-bright);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--paper);
+    border-color: rgba(244, 241, 234, 0.3);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--ochre-bright);
+    color: var(--ochre-bright);
+  }
+
+  .btn svg { width: 16px; height: 16px; }
+
+  /* ============ SECTION COMMONS ============ */
+  section {
+    padding: 70px 0;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: var(--terracotta);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 30px;
+    height: 2px;
+    background: var(--terracotta);
+  }
+
+  .section-headline {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 28px;
+    max-width: 750px;
+  }
+
+  .section-headline em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--moss);
+  }
+
+  .section-body {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 720px;
+    margin-bottom: 14px;
+  }
+
+  /* ============ ABSTRACT ============ */
+  .abstract {
+    background: var(--paper);
+  }
+
+  /* ============ TEAM ============ */
+  .team {
+    background: var(--bg);
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 30px;
+  }
+
+  @media (max-width: 720px) {
+    .team-grid { grid-template-columns: 1fr; }
+  }
+
+  .person-card {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 30px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .person-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 6px;
+    background: var(--moss);
+  }
+
+  .person-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--ochre);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .person-name {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .person-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+
+  .contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid var(--rule);
+    padding-top: 18px;
+  }
+
+  .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: color 0.2s;
+    padding: 4px 0;
+  }
+
+  .contact-row:hover {
+    color: var(--ochre);
+  }
+
+  .contact-row .icon {
+    width: 32px;
+    height: 32px;
+    background: var(--bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--moss);
+    flex-shrink: 0;
+  }
+
+  .contact-row:hover .icon {
+    background: var(--moss);
+    color: var(--paper);
+  }
+
+  .contact-row .icon svg { width: 14px; height: 14px; }
+
+  .contact-row .label {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    flex-shrink: 0;
+    width: 80px;
+  }
+
+  .contact-row .value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    word-break: break-all;
+  }
+
+  .contact-row:hover .value { color: var(--ochre); }
+
+  .person-actions {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    gap: 8px;
+  }
+
+  .action-btn {
+    flex: 1;
+    padding: 10px 14px;
+    background: var(--moss);
+    color: var(--paper);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .action-btn:hover {
+    background: var(--ink);
+  }
+
+  .action-btn svg { width: 14px; height: 14px; }
+
+  .action-btn.outline {
+    background: transparent;
+    color: var(--moss);
+    border: 1.5px solid var(--moss);
+  }
+
+  .action-btn.outline:hover {
+    background: var(--moss);
+    color: var(--paper);
+  }
+
+  /* ============ SUPERVISOR ============ */
+  .supervisor-block {
+    margin-top: 36px;
+    padding: 24px 28px;
+    background: var(--moss);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-left: 6px solid var(--ochre);
+  }
+
+  .supervisor-block .label-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--ochre-bright);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .supervisor-block .name {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .supervisor-block .inst {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: rgba(244, 241, 234, 0.75);
+    margin-top: 2px;
+  }
+
+  /* ============ PROJECT INFO STRIP ============ */
+  .strip {
+    background: var(--bg-deep);
+    color: var(--paper);
+    padding: 50px 0;
+  }
+
+  .strip-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+
+  @media (max-width: 720px) {
+    .strip-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+  }
+
+  .strip-item {
+    text-align: center;
+    padding: 0 16px;
+    position: relative;
+  }
+
+  .strip-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 15%;
+    height: 70%; width: 1px;
+    background: rgba(244, 241, 234, 0.15);
+  }
+
+  @media (max-width: 720px) {
+    .strip-item::after { display: none !important; }
+  }
+
+  .strip-num {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--ochre-bright);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+
+  .strip-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--paper);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    background: var(--paper);
+    padding: 50px 0 40px;
+    border-top: 4px solid var(--ink);
+    position: relative;
+  }
+
+  footer::before {
+    content: '';
+    position: absolute;
+    top: -4px; left: 0;
+    width: 30%;
+    height: 4px;
+    background: var(--ochre);
+  }
+
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+
+  .footer-content .right {
+    color: var(--terracotta);
+    font-weight: 600;
+  }
+
+  /* ============ ANIMATIONS ============ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-title, .tagline, .hero-cta-row {
+    animation: fadeUp 0.6s ease-out backwards;
+  }
+  .tagline { animation-delay: 0.15s; }
+  .hero-cta-row { animation-delay: 0.3s; }
+</style>
+</head>
+
+<body>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="container">
+      <div class="meta-top">
+        <div class="left">
+          <span class="dot"></span>
+          <span>BAHRIA UNIVERSITY · CS-F25-15 · 2026</span>
+        </div>
+        <span>FINAL YEAR PROJECT</span>
+      </div>
+
+      <h1 class="hero-title">Civic<span class="accent">.</span>Sense</h1>
+
+      <div class="tagline-rule"></div>
+
+      <p class="tagline">
+        Snap a photo. <strong>AI does the rest.</strong><br>
+        The fastest way for Pakistani citizens to report and resolve civic issues.
+      </p>
+
+      <div class="hero-cta-row">
+        <a href="#team" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          Meet the Team
+        </a>
+        <a href="#abstract" class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          Read Abstract
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATS STRIP ============ -->
+  <section class="strip" style="padding: 40px 0;">
+    <div class="container">
+      <div class="strip-grid">
+        <div class="strip-item">
+          <div class="strip-num">92.3%</div>
+          <div class="strip-label">Model Accuracy</div>
+        </div>
+        <div class="strip-item">
+          <div class="strip-num">&lt;200ms</div>
+          <div class="strip-label">Inference Time</div>
+        </div>
+        <div class="strip-item">
+          <div class="strip-num">3</div>
+          <div class="strip-label">User Roles</div>
+        </div>
+        <div class="strip-item">
+          <div class="strip-num">8</div>
+          <div class="strip-label">Union Councils</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABSTRACT ============ -->
+  <section class="abstract" id="abstract">
+    <div class="container">
+      <div class="section-label">Project Abstract</div>
+      <h2 class="section-headline">
+        Bridging citizens and authorities<br>
+        with <em>on-device AI.</em>
+      </h2>
+
+      <p class="section-body">
+        Pakistan's urban communities face a structural gap between citizens and local authorities. Civic issues like potholes and garbage piles persist for weeks because citizens lack a low-friction channel to report them, complaints get mis-routed, and there's no accountability when nothing happens.
+      </p>
+
+      <p class="section-body">
+        <strong style="color: var(--ink);">CivicSense</strong> addresses this gap through a Flutter-based mobile application that combines on-device image classification using a fine-tuned MobileNetV2 model, GPS-driven polygon routing to Union Council administrators, and a verification workflow that requires citizens to confirm or dispute the resolution of their complaints.
+      </p>
+
+      <p class="section-body">
+        The system supports three roles — citizen, UC administrator, and super administrator — each with role-based access control, privacy-preserving data masking, and a complete audit trail. Our model achieves <strong style="color: var(--ink);">92.3% validation accuracy</strong> across three classes (pothole, garbage, normal) with sub-200ms inference time on mid-range Android devices.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ TEAM ============ -->
+  <section class="team" id="team">
+    <div class="container">
+      <div class="section-label">Project Team</div>
+      <h2 class="section-headline">
+        Developed by <em>two students</em><br>
+        from Bahria University.
+      </h2>
+
+      <div class="team-grid">
+        <!-- ============ PERSON 1: AMMAZ ============ -->
+        <div class="person-card">
+          <div class="person-role">Lead Developer</div>
+          <div class="person-name">Chaudhary Ammaz Hussain</div>
+          <div class="person-id">01-134222-037</div>
+
+          <div class="contact-list">
+            <a href="mailto:ammazmmaz.ussain2018@gmail.com" class="contact-row">
+              <div class="icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="label">Email</div>
+              <div class="value">ammazmmaz.ussain2002@gmail.com</div>
+            </a>
+            <a href="tel:+923258852525" class="contact-row">
+              <div class="icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+              <div class="label">Phone</div>
+              <div class="value">+92 325 8852525</div>
+            </a>
+            <a href="LinkedIn:  https://www.linkedin.com/in/ammaz-hussain-75023b300/" target="_blank" rel="noopener" class="contact-row">
+              <div class="icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+              </div>
+              <div class="label">LinkedIn</div>
+              <div class="value">/in/ammaz-hussain-75023b300/</div>
+            </a>
+            <a href="https://github.com/ammazhussain" target="_blank" rel="noopener" class="contact-row">
+              <div class="icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+              </div>
+              <div class="label">GitHub</div>
+              <div class="value">@ammazhussain</div>
+            </a>
+          </div>
+
+          <div class="person-actions">
+            <a href="cv-ammaz.pdf" target="_blank" class="action-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download CV
+            </a>
+          </div>
+        </div>
+        <!-- ============ PERSON 1: ANAS ============ -->
+        <div class="person-card">
+          <div class="person-role">Lead Developer</div>
+          <div class="person-name">Muhammad Anas</div>
+          <div class="person-id">01-134222-089</div>
+
+          <div class="contact-list">
+            <a href="mailto:anasyounas2002@email.com" class="contact-row">
+              <div class="icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="label">Email</div>
+              <div class="value">anasyounas2002@email.com</div>
+            </a>
+            <a href="tel:+923143075502" class="contact-row">
+              <div class="icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+              <div class="label">Phone</div>
+              <div class="value">+92 314 3075502</div>
+            </a>
+            <a href="https://www.linkedin.com/in/muhammad-anas-2002ma/" target="_blank" rel="noopener" class="contact-row">
+              <div class="icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+              </div>
+              <div class="label">LinkedIn</div>
+              <div class="value">in/muhammad-anas-2002ma/</div>
+            </a>
+            <a href="https://github.com/AnasCodeVerse" target="_blank" rel="noopener" class="contact-row">
+              <div class="icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+              </div>
+              <div class="label">GitHub</div>
+              <div class="value">@AnasCodeVerse</div>
+            </a>
+          </div>
+
+          <div class="person-actions">
+            <a href="cv-anas.pdf" target="_blank" class="action-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download CV
+            </a>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <!-- Supervisor Block -->
+      <div class="supervisor-block">
+        <div style="flex: 1;">
+          <div class="label-mono">PROJECT SUPERVISOR</div>
+          <div class="name">Dr. Erum Ashraf</div>
+          <div class="inst">Department of Computer Science · Bahria University Islamabad</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <span>FYP · CS-F25-15 · BUIC 2026</span>
+        <span class="right">Open House 2026</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
