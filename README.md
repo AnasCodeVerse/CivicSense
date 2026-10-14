@@ -5,7 +5,7 @@
 Final-year project, BS Computer Science, Bahria University Islamabad (2025–2026).
 3rd place at the BUIC Open House.
 
-🎥 **Demo video:** [watch here](ADD_YOUTUBE_LINK)
+
 
 ---
 
